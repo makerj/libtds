@@ -13,7 +13,7 @@ test_pairingheap:
 	gcc -std=gnu11 -O3 -g pairingheap.c -o build/pairingheap && build/pairingheap
 
 test_aatree:
-	gcc -std=gnu11 -O3 -g aatree.c -o build/aatree && build/aatree
+	gcc -std=gnu11 -O1 -g aatree.c -o build/aatree && build/aatree
 
 build/libtds.a: $(OBJS)
 	ar -rcs $@ $^
