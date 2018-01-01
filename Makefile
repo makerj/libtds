@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 CC := gcc
-CFLAGS := -std=gnu11 -O3
+CFLAGS := -std=gnu11 -O3 -DNDBUG
 SRCS := $(shell find -name '*.c')
 OBJS := $(addprefix build/,$(notdir $(SRCS:%.c=%.o)))
 
