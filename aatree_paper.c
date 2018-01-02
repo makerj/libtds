@@ -128,6 +128,31 @@ void* aatree_find_max(struct aatree* self) {
 	return node->value;
 }
 
+void aatree_node_iterate(struct aatree* self, struct aatree_node* node, aatree_iteration_callback callback, void* callback_context, bool foward) {
+	if(node == &self->priv.bottom)
+		return;
+
+	if(foward) {
+		aatree_node_iterate(self, node->left, callback, callback_context, true);
+		callback(self, node->value, callback_context);
+		aatree_node_iterate(self, node->right, callback, callback_context, true);
+	} else {
+		aatree_node_iterate(self, node->right, callback, callback_context, false);
+		callback(self, node->value, callback_context);
+		aatree_node_iterate(self, node->left, callback, callback_context, false);
+	}
+}
+
+void aatree_iterate_foward(struct aatree* self, aatree_iteration_callback callback, void* callback_context) {
+	if(self->size && callback)
+		aatree_node_iterate(self, self->root, callback, callback_context, true);
+}
+
+void aatree_iterate_backward(struct aatree* self, aatree_iteration_callback callback, void* callback_context) {
+	if(self->size && callback)
+		aatree_node_iterate(self, self->root, callback, callback_context, false);
+}
+
 static struct aatree_node* aatree_node_create(struct aatree* self, int level, void* value) {
 	struct aatree_node* node = (struct aatree_node*)calloc(1, sizeof(struct aatree_node));
 	if(!node)
@@ -284,6 +309,10 @@ int aatree_node_dump(struct aatree* self, struct aatree_node* base, int indent) 
 	return nchild;
 }
 
+void print_value(struct aatree* self, void* value, void* context) {
+	printf("%ld\n", (intptr_t)value);
+}
+
 int int_compare(void* a_lhs, void* a_rhs) {
 	return (intptr_t)a_lhs - (intptr_t)a_rhs;
 }
@@ -300,6 +329,12 @@ int main(int argc, char** argv) {
 
 	printf("min: %ld\n", (intptr_t)aatree_find_min(tree));
 	printf("max: %ld\n", (intptr_t)aatree_find_max(tree));
+
+	puts("foward iteration");
+	aatree_iterate_foward(tree, print_value, NULL);
+	puts("backward iteration");
+	aatree_iterate_backward(tree, print_value, NULL);
+	exit(0);
 
 	for(intptr_t i = 10; i < 16; ++i) {
 		printf("removing %ld...\n", i);

@@ -68,6 +68,10 @@ void* aatree_find(struct aatree* self, void* value);
 void* aatree_find_min(struct aatree* self);
 void* aatree_find_max(struct aatree* self);
 
+typedef void (*aatree_iteration_callback)(struct aatree* self, void* value, void* callback_context);
+void aatree_iterate_foward(struct aatree* self, aatree_iteration_callback callback, void* callback_context);
+void aatree_iterate_backward(struct aatree* self, aatree_iteration_callback callback, void* callback_context);
+
 #ifdef __cplusplus
 }
 #endif
