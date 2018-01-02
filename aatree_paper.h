@@ -46,6 +46,7 @@ struct aatree {
 	struct {
 		int error;
 		void* removed_value;
+		int remove_performed;
 		struct aatree_node bottom;
 		struct aatree_node* deleted;
 		struct aatree_node* last;

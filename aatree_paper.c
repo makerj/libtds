@@ -70,7 +70,8 @@ int aatree_remove(struct aatree* self, void* value) {
 		return 1;
 
 	aatree_node_remove(self, &self->root, value);
-	if(self->priv.removed_value) {
+	if(self->priv.remove_performed) {
+		self->priv.remove_performed = 0;
 		self->priv.removed_value = NULL;
 		self->size -= 1;
 	}
@@ -223,6 +224,7 @@ static void aatree_node_remove(struct aatree* self, struct aatree_node** a_node,
 	if(node == self->priv.last && self->priv.deleted != &self->priv.bottom
 			&& self->compare(value, self->priv.deleted->value) == 0) {
 		// at the bottom of the tree we remove the element if it is present
+		self->priv.remove_performed = 1;
 		self->priv.removed_value = self->priv.deleted->value;
 		self->priv.deleted->value = node->value;
 		self->priv.deleted = &self->priv.bottom;
