@@ -319,6 +319,23 @@ int int_compare(void* a_lhs, void* a_rhs) {
 
 int main(int argc, char** argv) {
 	struct aatree* tree = aatree_create(int_compare);
+
+	// throughput test
+	clock_t b, e;
+	b = clock();
+	for(int i = 0; i < 1000000; ++i)
+		aatree_insert(tree, (void*)(intptr_t)i);
+	e = clock();
+	printf("[INSERT] elapsed time: %lf\n", (e - b) / (double)CLOCKS_PER_SEC);
+
+	b = clock();
+	for(int i = 0; i < 1000000; ++i)
+		aatree_remove(tree, (void*)(intptr_t)i);
+	e = clock();
+	printf("[DELETE] elapsed time: %lf\n", (e - b) / (double)CLOCKS_PER_SEC);
+	aatree_destroy(tree);
+
+	tree = aatree_create(int_compare);
 	for(intptr_t i = 10; i < 16; ++i) {
 		printf("inserting %ld...\n", i);
 		aatree_insert(tree, (void*)i);
